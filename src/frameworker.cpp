@@ -84,6 +84,11 @@ FrameWorker::FrameWorker(QSettings *settings_arg, QThread *worker, QObject *pare
                                 settings->value(QString("ssd_height"), 480).toInt(),
                                 settings->value(QString("ssd_height"), 480).toInt());
         break;
+    case STREAM_ENVI:
+        Camera = new Stream_ENVICamera(settings->value(QString("ssd_width"), 640).toInt(),
+                                settings->value(QString("ssd_height"), 480).toInt(),
+                                settings->value(QString("ssd_height"), 480).toInt());
+        break;
     case CAMERA_LINK:
 #ifdef USE_EDT
         Camera = new CLCamera();

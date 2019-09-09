@@ -17,6 +17,7 @@
 #include "lvframe.h"
 #include "cameramodel.h"
 #include "envicamera.h"
+#include "stream_envicamera.h"
 #include "xiocamera.h"
 
 #ifdef USE_EDT

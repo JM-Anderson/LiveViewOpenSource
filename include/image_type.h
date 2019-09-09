@@ -11,7 +11,8 @@ enum camera_t {SSD_ENVI, SSD_XIO, CL_6604A, CL_6604B};
 enum source_t {
     XIO = 0,
     ENVI = 1,
-    CAMERA_LINK = 2};
+    CAMERA_LINK = 2,
+    STREAM_ENVI = 3};
 
 enum org_t {fwBIL, fwBIP, fwBSQ};
 

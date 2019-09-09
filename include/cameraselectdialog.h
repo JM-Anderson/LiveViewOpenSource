@@ -28,7 +28,8 @@ public:
                             << QString("CL")
 #endif
                             << QString("SSD (ENVI)"))
-                            << QString("SSD (XIO)");
+                            << QString("SSD (XIO)")
+                            << QString("Stream (ENVI)");
 
         cameraListModel = new QStringListModel(this);
         cameraListModel->setStringList(cameraList);
@@ -102,7 +103,8 @@ private slots:
         s->setValue(QString("show_cam_dialog"), doNotShowBox->checkState() == 0);
         // qDebug() << s->value(QString("cam_model")).toInt();
         if (s->value(QString("cam_model"), "XIO").toInt() == 0 ||
-            s->value(QString("cam_model"), "ENVI").toInt() == 1) {
+            s->value(QString("cam_model"), "ENVI").toInt() == 1 ||
+            s->value(QString("cam_model"), "STREAM_ENVI").toInt() == 3) {
             dim_dialog->exec();
         } else {
             this->accept();
@@ -117,7 +119,7 @@ private slots:
     }
 
 private:
-    std::unordered_map<std::string, source_t> source_t_name{{"SSD (ENVI)", ENVI}, {"SSD (XIO)",XIO}, {"CL", CAMERA_LINK}, {"CAMERA_LINK", CAMERA_LINK}};
+    std::unordered_map<std::string, source_t> source_t_name{{"SSD (ENVI)", ENVI}, {"SSD (XIO)",XIO}, {"CL", CAMERA_LINK}, {"CAMERA_LINK", CAMERA_LINK}, {"Stream (ENVI)", STREAM_ENVI}};
     QSettings *s;
     QStringList cameraList;
     QStringList formatList;
