@@ -11,7 +11,7 @@ Stream_ENVICamera::Stream_ENVICamera(int frWidth,
     frame_width = frWidth;
     frame_height = frHeight;
     data_height = dataHeight;
-    camera_type = SSD_ENVI;
+    camera_type = STREAM_ENVI;
     source_type = ENVI;
 
     dummy.resize(size_t(framesize));
