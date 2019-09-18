@@ -2,6 +2,7 @@
 #define CAMERASELECTDIALOG_H
 
 #include "lvmainwindow.h"
+#include "imgserver_dialog.h"
 
 #include <QDialog>
 #include <QStringList>
@@ -103,9 +104,19 @@ private slots:
         s->setValue(QString("show_cam_dialog"), doNotShowBox->checkState() == 0);
         // qDebug() << s->value(QString("cam_model")).toInt();
         if (s->value(QString("cam_model"), "XIO").toInt() == 0 ||
-            s->value(QString("cam_model"), "ENVI").toInt() == 1 ||
-            s->value(QString("cam_model"), "STREAM_ENVI").toInt() == 3) {
+            s->value(QString("cam_model"), "ENVI").toInt() == 1) {
             dim_dialog->exec();
+        } else if (s->value(QString("cam_model"), "STREAM").toInt() == 3) {
+
+            // Create image server dialog and, if it is accepted, store the
+            // IP Address, port, and file name entered in the dialog.
+            ImgServer_Dialog ipDialog;
+            if (ipDialog.exec() == QDialog::Accepted) {
+                s->setValue("stream_ip", ipDialog.getIPAddress());
+                s->setValue("stream_port", ipDialog.getPort());
+                s->setValue("stream_filename", ipDialog.getFileName());
+                this->accept();
+            }
         } else {
             this->accept();
         }

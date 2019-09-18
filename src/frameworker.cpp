@@ -85,9 +85,9 @@ FrameWorker::FrameWorker(QSettings *settings_arg, QThread *worker, QObject *pare
                                 settings->value(QString("ssd_height"), 480).toInt());
         break;
     case STREAM_ENVI:
-        Camera = new Stream_ENVICamera(settings->value(QString("ssd_width"), 640).toInt(),
-                                settings->value(QString("ssd_height"), 480).toInt(),
-                                settings->value(QString("ssd_height"), 480).toInt());
+        Camera = new StreamCamera(settings->value("stream_ip", "127.0.0.1").toString(),
+                                  settings->value("stream_port", 1234).toUInt(),
+                                  settings->value("stream_filename", "ROICDATA.raw").toString());
         break;
     case CAMERA_LINK:
 #ifdef USE_EDT
@@ -228,7 +228,7 @@ void FrameWorker::captureFrames()
         lvframe_buffer->incIndex();
 
         count++;
-        if (duration < frame_period_ms && (cam_type == SSD_XIO || cam_type == SSD_ENVI)) {
+        if (duration < frame_period_ms && (cam_type == SSD_XIO || cam_type == SSD_ENVI || cam_type == STREAM)) {
             delay(int64_t(frame_period_ms) - duration);
         } //else {
         //    QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
@@ -315,7 +315,7 @@ void FrameWorker::saveFrames(save_req_t req)
 
     std::ofstream p_file;
     p_file.open(req.file_name, std::ofstream::binary);
-    while (save_count.load() < req.nFrames) {
+    while (qint64(save_count.load()) < req.nFrames) {
         new_count = count.load();
         for (int f = 0; f < new_count - next_frame; f++) {
             frame_fifo.push(lvframe_buffer->frame((next_frame + f) % CPU_FRAME_BUFFER_SIZE)->raw_data);
@@ -433,7 +433,7 @@ void FrameWorker::reportFPS()
 
 void FrameWorker::resetDir(const char *dirname)
 {
-    if (cam_type == SSD_XIO || cam_type == SSD_ENVI) {
+    if (cam_type == SSD_XIO || cam_type == SSD_ENVI || cam_type == STREAM) {
         Camera->setDir(dirname);
     }
 }

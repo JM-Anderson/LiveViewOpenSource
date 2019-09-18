@@ -48,6 +48,7 @@ VPATH += ./include \
          ./src \
          ./kernel \
          ./util \
+         ./ui \
 exists(EDT_include/edtinc.h): VPATH += ./EDT_include
 
 SOURCES += \
@@ -69,7 +70,8 @@ SOURCES += \
         fft_widget.cpp \
         saveserver.cpp \
         twoscomplimentfilter.cpp \
-        stream_envicamera.cpp
+        streamcamera.cpp \
+        imgserver_dialog.cpp
 
 exists(EDT_include/edtinc.h):SOURCES += clcamera.cpp
 
@@ -104,7 +106,9 @@ HEADERS += \
         twoscomplimentfilter.h \
         cameraviewdialog.h \
         frameratedialog.h \
-        stream_envicamera.h
+        streamcamera.h \
+        imgserver_dialog.h \
+        circbuffer.h
 
 exists(EDT_include/edtinc.h):HEADERS += clcamera.h
 
@@ -119,3 +123,6 @@ DISTFILES += \
 macx: LIBS += -framework OpenCL
 else:unix|win32: LIBS += -lOpenCL
 exists(EDT_include/edtinc.h): unix:!macx: LIBS += -L$$PWD/lib -lm -lpdv -ldl
+
+FORMS += \
+    imgserver_dialog.ui

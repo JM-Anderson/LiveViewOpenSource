@@ -176,6 +176,10 @@ uint16_t* ENVICamera::getFrame()
             running.store(false);
             emit timeout();
         }
+        std::vector<uint16_t> temp_vec(temp_frame.data(), temp_frame.data() + framesize);
+        qDebug() << "pixel 1: " << temp_vec[0];
+        qDebug() << "last pixel: " << temp_vec[framesize - 1];
+
         return temp_frame.data();
     } else {
         return dummy.data();
