@@ -67,7 +67,10 @@ void StreamCamera::tcpReadyRead()
 
     // If there are enough bytes to get a full frame, read
     // from the buffer
-    while (inBuffer.size() >= framesize * int(sizeof(quint16))) {
+    while (inBuffer.size() >= framesize * int(sizeof(uint16_t))) {
+        QFile file("test.envi");
+        file.open(QIODevice::WriteOnly);
+        QDataStream testOut(&file);
 
         // Since the network data uses BigEndian, we must use
         // QDataStream to convert back to LittleEndian when reading
@@ -75,17 +78,15 @@ void StreamCamera::tcpReadyRead()
         QDataStream pixStream(&inBuffer, QIODevice::ReadOnly);
         QVector<uint16_t> frame;
         for (int i=0; i < framesize; i++) {
-            quint16 pix;
+            uint16_t pix;
             pixStream >> pix;
+            testOut << pix;
             frame.append(uint16_t(pix));
         }
-        inBuffer.remove(0, framesize * sizeof(quint16));
+        inBuffer.remove(0, framesize * sizeof(uint16_t));
 
         circBuf.add(frame);
-        /*
-        if (frame_buf.size() <= 96) {
-            frame_buf.push_front(frame.toStdVector());
-        }*/
+        file.close();
     }
 }
 
