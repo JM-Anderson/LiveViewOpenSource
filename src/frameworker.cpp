@@ -426,7 +426,6 @@ void FrameWorker::reportFPS()
     if (Camera->isRunning()) {
         isTimeout = false;
         fps = double(MAXSAMPLES) * 1000000.0 / double(ticksum);
-        qDebug() << "fps: " << fps;
         emit updateFPS(fps);
     }
 }

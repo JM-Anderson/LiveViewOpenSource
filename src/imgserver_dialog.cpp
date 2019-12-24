@@ -20,7 +20,3 @@ QString ImgServer_Dialog::getIPAddress() {
 uint ImgServer_Dialog::getPort() {
     return uint(ui->portSpinBox->value());
 }
-
-QString ImgServer_Dialog::getFileName() {
-    return ui->fileNameEdit->text();
-}

@@ -28,32 +28,47 @@ StreamCamera::~StreamCamera()
     running.store(false);
 }
 
-/* Didn't get around to making a proper 'Go!' button
- * so the camera activates when the user tries to
- * open a file */
-void StreamCamera::setDir(const char *filename)
+void StreamCamera::setDir(const char *filePath)
 {
-    tcpSocket = new QTcpSocket();
-    connect(tcpSocket, &QIODevice::readyRead, this, &StreamCamera::tcpReadyRead);
+    if (tcpSocket == NULL || tcpSocket->state() != QAbstractSocket::ConnectedState) {
+        tcpSocket = new QTcpSocket();
+        connect(tcpSocket, &QIODevice::readyRead, this, &StreamCamera::tcpReadyRead);
 
-    // This needs to be reimplemented but for TCP reading
-    //
-    // Close out the last file stream
-    //if (is_reading) {
-    //    is_reading = false;
-    //    readLoopFuture.waitForFinished();
-    //}
+        // This needs to be reimplemented but for TCP reading
+        //
+        // Close out the last file stream
+        //if (is_reading) {
+        //    is_reading = false;
+        //    readLoopFuture.waitForFinished();
+        //}
 
-    tcpSocket->connectToHost(ipAddr, port);
-    if (!tcpSocket->isOpen()) {
-        qDebug("Could not open socket.");
-        if (running.load()) {
-            running.store(false);
-            emit timeout();
-            return;
+        tcpSocket->connectToHost(ipAddr, port);
+        if (!tcpSocket->isOpen()) {
+            qDebug("Could not open socket.");
+            if (running.load()) {
+                running.store(false);
+                emit timeout();
+                return;
+            }
+        } else {
+            // Sends a request for the specified file
+            tcpSocket->write(QString("sendfile:%1").arg(filePath).toUtf8());
+            tcpSocket->waitForBytesWritten();
+
+            running.store(true);
         }
+    } else {
+        // Sends a request for the specified file
+        qDebug() << "Trying to send request";
+        tcpSocket->write(QString("sendfile:%1").arg(filePath).toUtf8());
+        if(tcpSocket->waitForBytesWritten()) {
+            qDebug() << "Message sent";
+        } else {
+            qDebug() << "Message failed to send";
+        }
+
+        running.store(true);
     }
-    running.store(true);
 }
 
 /*
@@ -84,6 +99,8 @@ void StreamCamera::tcpReadyRead()
             frame.append(uint16_t(pix));
         }
         inBuffer.remove(0, framesize * sizeof(uint16_t));
+
+        qDebug() << frame[0] << " " << frame.last();
 
         circBuf.add(frame);
         file.close();

@@ -1,4 +1,6 @@
+
 #include "lvmainwindow.h"
+#include "imgserver_fileselect.h"
 #include <QFileInfo>
 #include <QDir>
 
@@ -372,6 +374,12 @@ void LVMainWindow::open()
             settings->setValue("save_dir", open_dir);
             fw->resetDir(source_dir.toLatin1().data());
         }
+    } else if (source_type == STREAM_ENVI) {
+        StreamSelectDialog* selectDialog = new StreamSelectDialog();
+        connect(selectDialog, &StreamSelectDialog::fileSelected, this, [this](QString filePath) {
+           fw->Camera->setDir(filePath.toStdString().c_str());
+        });
+        selectDialog->exec();
     } else {
         default_dir = settings->value(QString("save_dir"),
                                       QStandardPaths::writableLocation(

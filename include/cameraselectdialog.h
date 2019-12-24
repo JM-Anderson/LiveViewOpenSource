@@ -114,7 +114,6 @@ private slots:
             if (ipDialog.exec() == QDialog::Accepted) {
                 s->setValue("stream_ip", ipDialog.getIPAddress());
                 s->setValue("stream_port", ipDialog.getPort());
-                s->setValue("stream_filename", ipDialog.getFileName());
                 this->accept();
             }
         } else {

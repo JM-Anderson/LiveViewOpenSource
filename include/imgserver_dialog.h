@@ -17,7 +17,6 @@ public:
 
     QString getIPAddress();
     uint getPort();
-    QString getFileName();
 
 private:
     Ui::ImgServer_Dialog *ui;

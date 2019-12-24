@@ -71,7 +71,8 @@ SOURCES += \
         saveserver.cpp \
         twoscomplimentfilter.cpp \
         streamcamera.cpp \
-        imgserver_dialog.cpp
+        imgserver_dialog.cpp \
+        imgserver_fileselect.cpp
 
 exists(EDT_include/edtinc.h):SOURCES += clcamera.cpp
 
@@ -108,7 +109,8 @@ HEADERS += \
         frameratedialog.h \
         streamcamera.h \
         imgserver_dialog.h \
-        circbuffer.h
+        circbuffer.h \
+        imgserver_fileselect.h
 
 exists(EDT_include/edtinc.h):HEADERS += clcamera.h
 
@@ -125,4 +127,5 @@ else:unix|win32: LIBS += -lOpenCL
 exists(EDT_include/edtinc.h): unix:!macx: LIBS += -L$$PWD/lib -lm -lpdv -ldl
 
 FORMS += \
-    imgserver_dialog.ui
+    imgserver_dialog.ui \
+    imgserver_fileselect.ui
